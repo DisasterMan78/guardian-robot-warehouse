@@ -1,7 +1,8 @@
+/* global describe, beforeEach, it, expect */
+
 const { moveRobot, resetConfig } = require('../warehouse');
 
 describe('Test movement', () => {
-
   let config;
 
   beforeEach(() => {
@@ -113,7 +114,7 @@ describe('Test movement', () => {
     expect(result.x).toBe(8);
     expect(result.y).toBe(5);
     expect(result.invalidCount).toBe(2);
-    expect(result.invalidCommands).toEqual(['INVALID', 'JUNK'])
+    expect(result.invalidCommands).toEqual(['INVALID', 'JUNK']);
   });
 
   it('should not care about excess whitespace', () => {
@@ -174,5 +175,4 @@ describe('Test movement', () => {
     expect(result.crateAtLocation).toBe(true);
     expect(result.crateLocations['5-5']).toBe(false);
   });
-
 });

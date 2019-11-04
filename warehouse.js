@@ -3,171 +3,185 @@
 // Run tests with `npm run test`
 // Run persistent tests during development with `npm run watch test`
 
+// eslint-disable-next-line no-console
 console.log('Welcome to Mr. Robot\'s Warehouse'); // https://github.com/guardian/pairing-tests/tree/master/warehouse-robot
 
-const resetConfig = () => {
-        return {
-          startPostion: { x:5, y:5 },
-          maxWidth: 10,
-          maxHeight: 10,
-          output: [],
-          crateLocations: {
-            '5-5': true,
-            '10-10': true,
-          },
-          crateOnBoard: false,
-        };
-      },
-      config = resetConfig(),
-      moveRobot = (warehouse, commandString) => {
-
-        const sanitiseCommands = (commandString) => {
-                return commandString
-                .trim()
-                .toUpperCase()
-                .replace(/\s{2,}/g, ' ');//Replace any instance of more than one space with one
+const resetConfig = () => ({
+        startPostion: {
+          x: 5,
+          y: 5,
+        },
+        maxWidth: 10,
+        maxHeight: 10,
+        output: [],
+        crateLocations: {
+          '5-5': true,
+          '10-10': true,
+        },
+        crateOnBoard: false,
+      }),
+      moveRobot = (config, commandString) => {
+        const settings = config,
+              // eslint-disable-next-line arrow-body-style
+              sanitiseCommands = (commands) => {
+                return commands
+                  .trim()
+                  .toUpperCase()
+                  .replace(/\s{2,}/g, ' '); // Replace any instance of more than one space with one
               },
               checkForCrate = (warehouse, locationString) => {
-                if(warehouse.crateLocations.hasOwnProperty(locationString) && warehouse.crateLocations[locationString] === true) {
+                if (
+                  Object.prototype.hasOwnProperty.call(warehouse.crateLocations, locationString)
+                  && warehouse.crateLocations[locationString] === true
+                ) {
                   return true;
                 }
                 return false;
               },
-              commandList = sanitiseCommands(commandString).split(' ');
+              commandList = sanitiseCommands(commandString).split(' '),
+              currentPosition = {
+                x: settings.startPostion.x,
+                y: settings.startPostion.y,
+              },
+              invalidCommands = [];
 
-        let currentPosition = {
-            x: warehouse.startPostion.x,
-            y: warehouse.startPostion.y,
-          },
-          collisions = 0,
-          invalidCount = 0,
-          invalidCommands = [],
-          crateAtLocation;
+        let collisions = 0,
+              invalidCount = 0,
+              crateAtLocation,
+              locationString;
 
         commandList.forEach((command) => {
-          warehouse.output.push(command)
-          switch(command) {
+          settings.output.push(command);
+
+          switch (command) {
             case 'NULL':
               break;
             case 'N':
-              if (currentPosition.x + 1 < warehouse.maxHeight + 1) {
-                currentPosition.x++;
+              if (currentPosition.x + 1 < settings.maxHeight + 1) {
+                currentPosition.x += 1;
               } else {
-                warehouse.output.push('OUCH!');
-                collisions++;
+                settings.output.push('OUCH!');
+                collisions += 1;
               }
               break;
             case 'E':
-              if (currentPosition.y + 1 < warehouse.maxWidth + 1) {
-                currentPosition.y++;
+              if (currentPosition.y + 1 < settings.maxWidth + 1) {
+                currentPosition.y += 1;
               } else {
-                warehouse.output.push('OUCH!');
-                collisions++;
+                settings.output.push('OUCH!');
+                collisions += 1;
               }
               break;
             case 'S':
               if (currentPosition.x - 1 > -1) {
-                currentPosition.x--;
+                currentPosition.x -= 1;
               } else {
-                warehouse.output.push('OUCH!');
-                collisions++;
+                settings.output.push('OUCH!');
+                collisions += 1;
               }
               break;
             case 'W':
               if (currentPosition.y - 1 > -1) {
-                currentPosition.y--;
+                currentPosition.y -= 1;
               } else {
-                warehouse.output.push('OUCH!');
-                collisions++;
+                settings.output.push('OUCH!');
+                collisions += 1;
               }
               break;
             case 'NE':
             case 'EN':
-              if ((currentPosition.x + 1 < warehouse.maxHeight + 1) && (currentPosition.y + 1 < warehouse.maxWidth + 1)) {
-                currentPosition.x++;
-                currentPosition.y++;
+              if (
+                (currentPosition.x + 1 < settings.maxHeight + 1)
+                && (currentPosition.y + 1 < settings.maxWidth + 1)
+              ) {
+                currentPosition.x += 1;
+                currentPosition.y += 1;
               } else {
-                warehouse.output.push('OUCH!');
-                collisions++;
+                settings.output.push('OUCH!');
+                collisions += 1;
               }
               break;
             case 'SE':
             case 'ES':
-              if ((currentPosition.x - 1 > -1) && (currentPosition.y + 1 < warehouse.maxWidth + 1)) {
-                currentPosition.x--;
-                currentPosition.y++;
+              if ((currentPosition.x - 1 > -1) && (currentPosition.y + 1 < settings.maxWidth + 1)) {
+                currentPosition.x -= 1;
+                currentPosition.y += 1;
               } else {
-                warehouse.output.push('OUCH!');
-                collisions++;
+                settings.output.push('OUCH!');
+                collisions += 1;
               }
               break;
             case 'SW':
             case 'WS':
               if ((currentPosition.x - 1 > -1) && (currentPosition.y - 1 > -1)) {
-                currentPosition.x--;
-                currentPosition.y--;
+                currentPosition.x -= 1;
+                currentPosition.y -= 1;
               } else {
-                warehouse.output.push('OUCH!');
-                collisions++;
+                settings.output.push('OUCH!');
+                collisions += 1;
               }
               break;
             case 'NW':
             case 'WN':
-              if ((currentPosition.x + 1 < warehouse.maxHeight + 1) && (currentPosition.y - 1 > -1)) {
-                currentPosition.x++;
-                currentPosition.y--;
+              if (
+                (currentPosition.x + 1 < settings.maxHeight + 1)
+                && (currentPosition.y - 1 > -1)
+              ) {
+                currentPosition.x += 1;
+                currentPosition.y -= 1;
               } else {
-                warehouse.output.push('OUCH!');
-                collisions++;
+                settings.output.push('OUCH!');
+                collisions += 1;
               }
-                break;
+              break;
             case 'G':
             case 'D':
-              let locationString = `${currentPosition.x}-${currentPosition.y}`;
+              locationString = `${currentPosition.x}-${currentPosition.y}`;
 
-              crateAtLocation = checkForCrate(warehouse, locationString);
+              crateAtLocation = checkForCrate(settings, locationString);
 
-              if(command === 'G' && crateAtLocation === true && warehouse.crateOnBoard === false) {
-                warehouse.crateLocations[locationString] = false;
-                warehouse.crateOnBoard = true;
-                crateAtLocation = checkForCrate(warehouse, locationString);
+              if (command === 'G' && crateAtLocation === true && settings.crateOnBoard === false) {
+                settings.crateLocations[locationString] = false;
+                settings.crateOnBoard = true;
+                crateAtLocation = checkForCrate(settings, locationString);
               }
 
-              if(command === 'D' && crateAtLocation === false && warehouse.crateOnBoard === true) {
-                warehouse.crateLocations[locationString] = true;
-                warehouse.crateOnBoard = false;
-                crateAtLocation = checkForCrate(warehouse, locationString);
+              if (command === 'D' && crateAtLocation === false && settings.crateOnBoard === true) {
+                settings.crateLocations[locationString] = true;
+                settings.crateOnBoard = false;
+                crateAtLocation = checkForCrate(settings, locationString);
               }
               break;
             default:
-              warehouse.output.push(`Invalid command: ${command}`);
-              invalidCount++;
+              settings.output.push(`Invalid command: ${command}`);
+              invalidCount += 1;
               invalidCommands.push(command);
               break;
           }
-          warehouse.output.push(`Position x: ${currentPosition.x} y: ${currentPosition.y}`);
-
+          settings.output.push(`Position x: ${currentPosition.x} y: ${currentPosition.y}`);
         });
 
-        warehouse.crateAtLocation = crateAtLocation;
-        warehouse.output.push(currentPosition)
-        warehouse.x = currentPosition.x;
-        warehouse.y = currentPosition.y;
-        warehouse.collisions = collisions;
-        warehouse.invalidCount = invalidCount;
-        warehouse.invalidCommands = invalidCommands;
-        return warehouse;
+        settings.crateAtLocation = crateAtLocation;
+        settings.output.push(currentPosition);
+        settings.x = currentPosition.x;
+        settings.y = currentPosition.y;
+        settings.collisions = collisions;
+        settings.invalidCount = invalidCount;
+        settings.invalidCommands = invalidCommands;
+        return settings;
       },
       outputRobot = (warehouse, commandString) => {
         const result = moveRobot(warehouse, commandString);
         result.output.forEach((logline) => {
+          // eslint-disable-next-line no-console
           console.log(logline);
         });
-      };
+      },
+      config = resetConfig();
 
-/* commands commented out to reduce noise in tests while developing */
-// outputRobot(config, 'N E S W');
-// outputRobot(config, 'N E N E N E N E');
+/* commands may be commented out to reduce noise in tests while developing */
+outputRobot(config, 'N E S W');
+outputRobot(config, 'N E N E N E N E');
 
 exports.moveRobot = moveRobot;
 exports.resetConfig = resetConfig;
