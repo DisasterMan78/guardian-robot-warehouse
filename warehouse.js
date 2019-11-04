@@ -57,32 +57,32 @@ const resetConfig = () => ({
             case 'NULL':
               break;
             case 'N':
-              if (currentPosition.x + 1 < settings.maxHeight + 1) {
-                currentPosition.x += 1;
-              } else {
-                settings.output.push('OUCH!');
-                collisions += 1;
-              }
-              break;
-            case 'E':
-              if (currentPosition.y + 1 < settings.maxWidth + 1) {
+              if (currentPosition.y + 1 < settings.maxHeight + 1) {
                 currentPosition.y += 1;
               } else {
                 settings.output.push('OUCH!');
                 collisions += 1;
               }
               break;
+            case 'E':
+              if (currentPosition.x + 1 < settings.maxWidth + 1) {
+                currentPosition.x += 1;
+              } else {
+                settings.output.push('OUCH!');
+                collisions += 1;
+              }
+              break;
             case 'S':
-              if (currentPosition.x - 1 > -1) {
-                currentPosition.x -= 1;
+              if (currentPosition.y - 1 > -1) {
+                currentPosition.y -= 1;
               } else {
                 settings.output.push('OUCH!');
                 collisions += 1;
               }
               break;
             case 'W':
-              if (currentPosition.y - 1 > -1) {
-                currentPosition.y -= 1;
+              if (currentPosition.x - 1 > -1) {
+                currentPosition.x -= 1;
               } else {
                 settings.output.push('OUCH!');
                 collisions += 1;
@@ -91,8 +91,8 @@ const resetConfig = () => ({
             case 'NE':
             case 'EN':
               if (
-                (currentPosition.x + 1 < settings.maxHeight + 1)
-                && (currentPosition.y + 1 < settings.maxWidth + 1)
+                (currentPosition.y + 1 < settings.maxHeight + 1)
+                && (currentPosition.x + 1 < settings.maxWidth + 1)
               ) {
                 currentPosition.x += 1;
                 currentPosition.y += 1;
@@ -103,9 +103,9 @@ const resetConfig = () => ({
               break;
             case 'SE':
             case 'ES':
-              if ((currentPosition.x - 1 > -1) && (currentPosition.y + 1 < settings.maxWidth + 1)) {
-                currentPosition.x -= 1;
-                currentPosition.y += 1;
+              if ((currentPosition.y - 1 > -1) && (currentPosition.x + 1 < settings.maxWidth + 1)) {
+                currentPosition.x += 1;
+                currentPosition.y -= 1;
               } else {
                 settings.output.push('OUCH!');
                 collisions += 1;
@@ -113,7 +113,7 @@ const resetConfig = () => ({
               break;
             case 'SW':
             case 'WS':
-              if ((currentPosition.x - 1 > -1) && (currentPosition.y - 1 > -1)) {
+              if ((currentPosition.y - 1 > -1) && (currentPosition.x - 1 > -1)) {
                 currentPosition.x -= 1;
                 currentPosition.y -= 1;
               } else {
@@ -124,11 +124,11 @@ const resetConfig = () => ({
             case 'NW':
             case 'WN':
               if (
-                (currentPosition.x + 1 < settings.maxHeight + 1)
-                && (currentPosition.y - 1 > -1)
+                (currentPosition.y + 1 < settings.maxHeight + 1)
+                && (currentPosition.x - 1 > -1)
               ) {
-                currentPosition.x += 1;
-                currentPosition.y -= 1;
+                currentPosition.x -= 1;
+                currentPosition.y += 1;
               } else {
                 settings.output.push('OUCH!');
                 collisions += 1;
