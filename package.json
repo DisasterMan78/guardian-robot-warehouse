@@ -7,7 +7,11 @@
     "jasmine": "^3.5.0",
     "npm-watch": "^0.6.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint": "^6.6.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2"
+  },
   "scripts": {
     "test": "jasmine \"spec/**/*[sS]pec.js\"",
     "watch": "npm-watch"
